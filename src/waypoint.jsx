@@ -11,6 +11,8 @@ const POSITIONS = {
 const propTypes = {
   // threshold is percentage of the height of the visible part of the
   // scrollable ancestor (e.g. 0.1)
+  topOffset: PropTypes.number,
+  bottomOffset: PropTypes.number,
   threshold: PropTypes.number,
   onEnter: PropTypes.func,
   onLeave: PropTypes.func,
@@ -20,6 +22,8 @@ const propTypes = {
 };
 
 const defaultProps = {
+  topOffset: 0,
+  bottomOffset: 0,
   threshold: 0,
   onEnter() {},
   onLeave() {},
@@ -214,14 +218,16 @@ export default class Waypoint extends React.Component {
     }
 
     const thresholdPx = contextHeight * this.props.threshold;
+    const topOffsetPx = this.props.topOffset;
+    const bottomOffsetPx = this.props.bottomOffset;
 
-    const isBelowTop = contextScrollTop <= waypointTop + thresholdPx;
+    const isBelowTop = contextScrollTop <= waypointTop + thresholdPx - topOffsetPx;
     if (!isBelowTop) {
       return POSITIONS.above;
     }
 
     const contextBottom = contextScrollTop + contextHeight;
-    const isAboveBottom = contextBottom >= waypointTop - thresholdPx;
+    const isAboveBottom = contextBottom >= waypointTop - thresholdPx + bottomOffsetPx;
     if (!isAboveBottom) {
       return POSITIONS.below;
     }
